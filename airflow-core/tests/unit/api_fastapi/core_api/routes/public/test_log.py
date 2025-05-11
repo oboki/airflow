@@ -462,7 +462,10 @@ class TestTaskInstancesLog:
         mock_ti.try_number = 3
         mock_ti_history = mock.Mock()
 
-        with mock.patch.object(session, "scalar", side_effect=[mock_ti, mock_ti_history]) as _:
+        with mock.patch(
+            "airflow.api_fastapi.core_api.routes.public.log._find_task_instance_for_try_number",
+            side_effect=[mock_ti, mock_ti_history],
+        ) as _:
             response = self.client.get(
                 f"/dags/{self.DAG_ID}/dagRuns/{self.RUN_ID}/taskInstances/{self.TASK_ID}/logs/{try_number}",
                 params={"token": token},
